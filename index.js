@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const timelineRoute = require('./routes/timeline')
 const tweetsRoutes = require('./routes/tweets')
 const usersRoutes = require('./routes/users')
+const likesRoutes = require('./routes/likes')
 
 app.use(express.json());
 
@@ -22,8 +23,8 @@ mongoose.connect(
 app.use("/Usuarios", usersRoutes)
 app.use("/Publicaciones", tweetsRoutes)
 app.use("/Home", timelineRoute)
-
+app.use("/likes", likesRoutes)
 
 app.listen(3000, () => {
-        console.log('Servidor online');    
+        console.log('Servidor online');   
 });
