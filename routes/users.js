@@ -1,24 +1,28 @@
 const express = require('express');
 const app = express();
 const Usuario = require("../models/usuarioM")
-
-
+const middleware = require("../middlewares/users")
+const controller = require("../controllers/users")
 app.get('/', async (req,res) => {
     const usuario = await Usuario.find()
     res.status(200).json(usuario)
 })
 
-app.post('/', async (req,res) => {
-    const usuario = new Usuario(req.body);
-    await usuario.save()
-    res.status(200).json("Usuario creado")
-})
+app.post(
+    '/', 
+    function (req,res, next) {
+        middleware.validateCreate(req, res, next);
+	},
+    controller.createUsuario
+)
 
-app.put('/', async (req, res)=>{
-    const usuario = await Usuario.findByIdAndUpdate(req.body.id, req.body)
-    await usuario.save()
-    res.status(200).json("Usuario actualizado")
-})
+app.put(
+    '/', 
+    function (req,res, next) {
+        middleware.validateUpdate(req, res, next);
+	},
+    controller.updateUsuario
+)
 
 app.delete('/', async (req, res)=> {
    Usuario.findByIdAndDelete(req.body.id, function (err, docs) {
