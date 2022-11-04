@@ -72,6 +72,7 @@ app.delete('/seguir',async (req,res) => {
     const seguidor = await Usuario.findByIdAndUpdate(req.body.seguidor, {following: seguidos})
     seguidor.save()
     res.status(200).json("Enlace seguido-seguidor eliminado exitosamente")
+    
 } )
 
 module.exports = app;
