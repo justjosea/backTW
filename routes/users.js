@@ -24,12 +24,24 @@ app.delete(
     controller.deleteUsuario
 )
 
-app.get('/:id/seguidores', controller.getSeguidores)
+app.get(
+    '/:id/seguidores', 
+    function (req, res, next) {middleware.validateGetbyId(req, res, next);},
+    controller.getSeguidores)
 
-app.get('/:id/seguidos', controller.getSeguidos)
+app.get(
+    '/:id/seguidos', 
+    function (req, res, next) {middleware.validateGetbyId(req, res, next);},
+    controller.getSeguidos)
 
-app.post('/seguir', controller.follow)
+app.post(
+    '/seguir', 
+    function (req, res, next) {middleware.validateFollow(req, res, next);},
+    controller.follow)
 
-app.delete('/seguir', controller.unfollow)
+app.delete(
+    '/seguir', 
+    function (req, res, next) {middleware.validateFollow(req, res, next);},
+    controller.unfollow)
 
 module.exports = app;

@@ -114,3 +114,47 @@ exports.validateDelete = (req, res, next) => {
 		res.status(500).send(getErrorResponseFormat(message));
 	}
 };
+
+exports.validateGetbyId = (req, res, next) => {
+	const { id } = req.params;
+	const idP = Joi.string().required().messages({
+			"any.required": `El id es requerido`,
+			"string.base": `El id no es valido`,
+			"string.empty": `El id no puede ser vacio`,
+		})
+	
+	const { error } = idP.validate(id);
+	const valid = error == null;
+	if (valid) {
+		next();
+	} else {
+		const { details } = error;
+		const message = details.map((i) => i.message).join(",");
+		res.status(500).send(getErrorResponseFormat(message));
+	}
+};
+
+exports.validateFollow = (req, res, next) => {
+	const { body } = req;
+	const schema = Joi.object().keys({
+		seguidor: Joi.string().required().messages({
+			"any.required": `El id es requerido`,
+			"string.base": `El id no es valido`,
+			"string.empty": `El id no puede ser vacio`,
+		}),
+		seguido: Joi.string().required().messages({
+			"any.required": `El id es requerido`,
+			"string.base": `El id no es valido`,
+			"string.empty": `El id no puede ser vacio`,
+		}),
+	});
+	const { error } = schema.validate(body);
+	const valid = error == null;
+	if (valid) {
+		next();
+	} else {
+		const { details } = error;
+		const message = details.map((i) => i.message).join(",");
+		res.status(500).send(getErrorResponseFormat(message));
+	}
+};
