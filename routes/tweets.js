@@ -1,14 +1,29 @@
 const express = require('express');
 const app = express();
-const Tweet = require("../models/tweetM")
+const middleware = require("../middlewares/tweets")
 const controller = require("../controllers/tweets")
 
-app.get('/', controller.getTweets)
+app.get(
+    '/', 
+    function (req, res, next) { middleware.validateGet(req, res, next); },
+    controller.getTweets
+)
 
-app.post('/', controller.createTweet)
+app.post(
+    '/', 
+    function (req, res, next) { middleware.validateCreate(req, res, next); },
+    controller.createTweet
+)
 
-app.put('/', controller.updateTweet)
+app.put(
+    '/',
+    function (req, res, next) { middleware.validateUpdate(req, res, next); },
+    controller.updateTweet
+)
 
-app.delete('/', controller.deleteTweet)
+app.delete(
+    '/',
+    function (req, res, next) { middleware.validateDelete(req, res, next); },
+    controller.deleteTweet)
 
 module.exports = app;
