@@ -3,80 +3,33 @@ const app = express();
 const Usuario = require("../models/usuarioM")
 const middleware = require("../middlewares/users")
 const controller = require("../controllers/users")
-app.get('/', async (req,res) => {
-    const usuario = await Usuario.find()
-    res.status(200).json(usuario)
-})
+
+app.get('/', controller.getUsuarios)
 
 app.post(
-    '/', 
-    function (req,res, next) {
-        middleware.validateCreate(req, res, next);
-	},
+    '/',
+    function (req, res, next) {middleware.validateCreate(req, res, next);},
     controller.createUsuario
 )
 
 app.put(
-    '/', 
-    function (req,res, next) {
-        middleware.validateUpdate(req, res, next);
-	},
+    '/',
+    function (req, res, next) {middleware.validateUpdate(req, res, next);},
     controller.updateUsuario
 )
 
-app.delete('/', async (req, res)=> {
-   Usuario.findByIdAndDelete(req.body.id, function (err, docs) {
-    if (err){
-        res.status(400).json(err)
-    }
-    else{
-        res.status(200).json("Usuario eliminado " + docs)
-    }
-});
-})
+app.delete(
+    '/',
+    function (req, res, next) {middleware.validateDelete(req, res, next);},
+    controller.deleteUsuario
+)
 
-app.get('/:id/seguidores', async (req,res) => {
+app.get('/:id/seguidores', controller.getSeguidores)
 
-    let seguidores = await Usuario.findById(req.params.id,{followers:1, _id: 0})
-    seguidores = seguidores.followers
-    res.status(200).json(seguidores)
-})
+app.get('/:id/seguidos', controller.getSeguidos)
 
+app.post('/seguir', controller.follow)
 
-app.get('/:id/seguidos', async (req,res) => {
-
-    let seguidos = await Usuario.findById(req.params.id,{following:1, _id: 0})
-    seguidos = seguidos.following
-    res.status(200).json(seguidos)
-})
-
-app.post('/seguir', async (req,res) => {
-    
-    let seguidos = await Usuario.findById(req.body.seguidor,{following: 1, _id: 0})
-    let seguidores = await Usuario.findById(req.body.seguido, {followers: 1, _id: 0})
-    seguidos = seguidos.following
-    seguidores = seguidores.followers
-    seguidos.push(req.body.seguido)
-    seguidores.push(req.body.seguidor)
-    const seguido = await Usuario.findByIdAndUpdate(req.body.seguido, {followers: seguidores})
-    seguido.save()
-    const seguidor = await Usuario.findByIdAndUpdate(req.body.seguidor, {following: seguidos})
-    seguidor.save()
-    res.status(200).json("Enlace seguido-seguidor creado exitosamente")
-})
-
-app.delete('/seguir',async (req,res) => {
-    
-    let seguidos = await Usuario.findById(req.body.seguidor,{following: 1, _id: 0})
-    let seguidores = await Usuario.findById(req.body.seguido, {followers: 1, _id: 0})
-    seguidos = seguidos.following.filter((e)=> e != req.body.seguido)
-    seguidores = seguidores.followers.filter((e)=> e != req.body.seguidor)
-    const seguido = await Usuario.findByIdAndUpdate(req.body.seguido, {followers: seguidores})
-    seguido.save()
-    const seguidor = await Usuario.findByIdAndUpdate(req.body.seguidor, {following: seguidos})
-    seguidor.save()
-    res.status(200).json("Enlace seguido-seguidor eliminado exitosamente")
-    
-} )
+app.delete('/seguir', controller.unfollow)
 
 module.exports = app;
