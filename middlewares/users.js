@@ -27,14 +27,6 @@ exports.validateCreate = (req, res, next) => {
             "array.base": `Los seguidos deben ser un array`,
             "string.base": `Los seguidos no son validos`
         }),
-        tweets: Joi.array().items(Joi.string()).messages({
-            "array.base": `Los tweets deben ser un array`,
-            "string.base": `Los tweets no son validos`
-        }),
-        likes: Joi.array().items(Joi.string()).messages({
-            "array.base": `Los likes deben ser un array`,
-            "string.base": `Los likes no son validos`
-        }),
 	});
 
 	const { error } = schema.validate(body);
@@ -51,6 +43,11 @@ exports.validateCreate = (req, res, next) => {
 exports.validateUpdate = (req, res, next) => {
 	const { body } = req;
 	const schema = Joi.object().keys({
+		id: Joi.string().required().messages({
+			"any.required": `El id es requerido`,
+			"string.base": `El id no es valido`,
+			"string.empty": `El id no puede ser vacio`,
+		}),
 		name: Joi.string().required().messages({
 			"any.required": `El nombre es requerido`,
 			"string.base": `El nombre no es valido`,
@@ -73,14 +70,6 @@ exports.validateUpdate = (req, res, next) => {
         following: Joi.array().items(Joi.string()).messages({
             "array.base": `Los seguidos deben ser un array`,
             "string.base": `Los seguidos no son validos`
-        }),
-        tweets: Joi.array().items(Joi.string()).messages({
-            "array.base": `Los tweets deben ser un array`,
-            "string.base": `Los tweets no son validos`
-        }),
-        likes: Joi.array().items(Joi.string()).messages({
-            "array.base": `Los likes deben ser un array`,
-            "string.base": `Los likes no son validos`
         }),
 	});
 

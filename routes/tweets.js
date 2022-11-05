@@ -24,6 +24,7 @@ app.put(
 app.delete(
     '/',
     function (req, res, next) { middleware.validateDelete(req, res, next); },
-    controller.deleteTweet)
+    controller.deleteTweet
+)
 
 module.exports = app;

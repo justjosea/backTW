@@ -33,10 +33,6 @@ exports.validateCreate = (req, res, next) => {
 			"string.base": `El autor no es valido`,
 			"string.empty": `El autor no puede ser vacio`,
 		}),
-        likes: Joi.array().items(Joi.string()).messages({
-            "array.base": `Los likes deben ser un array`,
-            "string.base": `Los likes no son validos`
-        }),
 	});
 
 	const { error } = schema.validate(body);
