@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
-const Tweet = require('../models/tweetM')
-const Usuario = require("../models/usuarioM")
+const middleware = require("../middlewares/timeline")
 const controller = require("../controllers/timeline")
 module.exports = app;
 
-app.get('/', controller.getTweets)
+app.get(
+    '/',
+    function (req, res, next) { middleware.validateGet(req, res, next); },
+    controller.getTweets
+)
